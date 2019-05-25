@@ -38,7 +38,7 @@ module.exports = function(grunt) {
                     urls: ['http://127.0.0.1:9999/test'],
                     browsers,
                     public: 'public',
-                    onTestComplete: function(result, callback) {
+                    onTestComplete (result, callback) {
                         // Called after a unit test is done, per page, per browser
                         // 'result' param is the object returned by the test framework's reporter
                         // 'callback' is a Node.js style callback function. You must invoke it after you

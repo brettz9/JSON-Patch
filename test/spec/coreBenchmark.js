@@ -10,7 +10,7 @@ if (typeof Benchmark === 'undefined') {
 
 var suite = new Benchmark.Suite;
 suite.add('add operation', {
-    setup: function(){
+    setup () {
         var obj = {
             foo: 1,
             baz: [{
@@ -18,7 +18,7 @@ suite.add('add operation', {
             }]
         };
     },
-    fn: function() {
+    fn () {
         jsonpatch.applyPatch(obj, [{
             op: 'add',
             path: '/bar',
@@ -27,7 +27,7 @@ suite.add('add operation', {
     }
 });
 suite.add('remove operation', {
-    setup: function(){
+    setup () {
         var obj = {
             foo: 1,
             baz: [{
@@ -36,7 +36,7 @@ suite.add('remove operation', {
             bar: [1, 2, 3, 4]
         };
     },
-    fn: function() {
+    fn () {
         jsonpatch.applyPatch(obj, [{
             op: 'remove',
             path: '/bar'
@@ -44,7 +44,7 @@ suite.add('remove operation', {
     }
 });
 suite.add('replace operation', {
-    setup: function(){
+    setup () {
         var obj = {
             foo: 1,
             baz: [{
@@ -52,7 +52,7 @@ suite.add('replace operation', {
             }]
         };
     },
-    fn: function() {
+    fn () {
         jsonpatch.applyPatch(obj, [{
             op: 'replace',
             path: '/foo',
@@ -61,7 +61,7 @@ suite.add('replace operation', {
     }
 });
 suite.add('move operation', {
-    setup: function(){
+    setup () {
         var obj = {
             foo: 1,
             baz: [{
@@ -70,7 +70,7 @@ suite.add('move operation', {
             bar: [1, 2, 3, 4]
         };
     },
-    fn: function() {
+    fn () {
         jsonpatch.applyPatch(obj, [{
             op: 'move',
             from: '/baz/0',
@@ -79,7 +79,7 @@ suite.add('move operation', {
     }
 });
 suite.add('copy operation', {
-    setup: function(){
+    setup () {
         var obj = {
             foo: 1,
             baz: [{
@@ -88,7 +88,7 @@ suite.add('copy operation', {
             bar: [1, 2, 3, 4]
         };
     },
-    fn: function() {
+    fn () {
         jsonpatch.applyPatch(obj, [{
             op: 'copy',
             from: '/baz/0',
@@ -97,7 +97,7 @@ suite.add('copy operation', {
     }
 });
 suite.add('test operation', {
-    setup: function(){
+    setup () {
         var obj = {
             foo: 1,
             baz: [{
@@ -105,7 +105,7 @@ suite.add('test operation', {
             }]
         };
     },
-    fn: function() {
+    fn () {
         jsonpatch.applyPatch(obj, [{
             op: 'test',
             path: '/baz',

@@ -17,7 +17,7 @@ if (typeof Benchmark === 'undefined') {
 
 var suite = new Benchmark.Suite();
 suite.add('generate operation', {
-  setup: function() {
+  setup () {
     var obj = {
       firstName: 'Albert',
       lastName: 'Einstein',
@@ -32,7 +32,7 @@ suite.add('generate operation', {
     };
     var observer = jsonpatch.observe(obj);
   },
-  fn: function() {
+  fn () {
     obj.firstName = 'Joachim';
     obj.lastName = 'Wester';
     obj.phoneNumbers[0].number = '123';
@@ -42,7 +42,7 @@ suite.add('generate operation', {
   }
 });
 suite.add('generate operation and re-apply', {
-  setup: function() {
+  setup () {
     var obj = {
       firstName: 'Albert',
       lastName: 'Einstein',
@@ -57,7 +57,7 @@ suite.add('generate operation and re-apply', {
     };
     var observer = jsonpatch.observe(obj);
   },
-  fn: function() {
+  fn () {
     obj.firstName = 'Joachim';
     obj.lastName = 'Wester';
     obj.phoneNumbers[0].number = '123';
@@ -81,7 +81,7 @@ suite.add('generate operation and re-apply', {
   }
 });
 suite.add('compare operation', {
-  setup: function() {
+  setup () {
     var obj = {
       firstName: 'Albert',
       lastName: 'Einstein',
@@ -107,13 +107,13 @@ suite.add('compare operation', {
       ]
     };
   },
-  fn: function() {
+  fn () {
     var patches = jsonpatch.compare(obj, obj2);
   }
 });
 
 suite.add('compare operation same but deep objects', {
-  setup: function() {
+  setup () {
     var depth = 10;
 
     function shallowObj() {
@@ -140,7 +140,7 @@ suite.add('compare operation same but deep objects', {
     }
     var obj2 = obj;
   },
-  fn: function() {
+  fn () {
     var patches = jsonpatch.compare(obj, obj2);
   }
 });

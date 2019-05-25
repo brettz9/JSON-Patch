@@ -3,10 +3,10 @@
  * (c) 2017 Joachim Wester
  * MIT license
  */
-declare var require: any;
+declare const require: any;
 
 const equalsOptions = { strict: true };
-const _equals = require('deep-equal');
+import _equals from 'deep-equal';
 const areEquals = (a: any, b: any): boolean => {
   return _equals(a, b, equalsOptions)
 }
@@ -84,21 +84,21 @@ export interface Observer<T> {
 
 /* The operations applicable to an object */
 const objOps = {
-  add: function (obj, key, document) {
+  add (obj, key, document) {
     obj[key] = this.value;
     return { newDocument: document };
   },
-  remove: function (obj, key, document) {
-    var removed = obj[key];
+  remove (obj, key, document) {
+    const removed = obj[key];
     delete obj[key];
     return { newDocument: document, removed }
   },
-  replace: function (obj, key, document) {
-    var removed = obj[key];
+  replace (obj, key, document) {
+    const removed = obj[key];
     obj[key] = this.value;
     return { newDocument: document, removed };
   },
-  move: function (obj, key, document) {
+  move (obj, key, document) {
     /* in case move target overwrites an existing value,
     return the removed value, this can be taxing performance-wise,
     and is potentially unneeded */
@@ -118,7 +118,7 @@ const objOps = {
 
     return { newDocument: document, removed };
   },
-  copy: function (obj, key, document) {
+  copy (obj, key, document) {
     const valueToCopy = getValueByPointer(document, this.from);
     // enforce copy by value so further operations don't affect source (see issue #177)
     applyOperation(document,
@@ -126,18 +126,18 @@ const objOps = {
     );
     return { newDocument: document }
   },
-  test: function (obj, key, document) {
+  test (obj, key, document) {
     return { newDocument: document, test: areEquals(obj[key], this.value) }
   },
-  _get: function (obj, key, document) {
+  _get (obj, key, document) {
     this.value = obj[key];
     return { newDocument: document }
   }
 };
 
 /* The operations applicable to an array. Many are the same as for the object */
-var arrOps = {
-  add: function (arr, i, document) {
+const arrOps = {
+  add (arr, i, document) {
     if(isInteger(i)) {
       arr.splice(i, 0, this.value);
     } else { // array props
@@ -146,12 +146,12 @@ var arrOps = {
     // this may be needed when using '-' in an array
     return { newDocument: document, index: i }
   },
-  remove: function (arr, i, document) {
-    var removedList = arr.splice(i, 1);
+  remove (arr, i, document) {
+    const removedList = arr.splice(i, 1);
     return { newDocument: document, removed: removedList[0] };
   },
-  replace: function (arr, i, document) {
-    var removed = arr[i];
+  replace (arr, i, document) {
+    const removed = arr[i];
     arr[i] = this.value;
     return { newDocument: document, removed };
   },
@@ -173,7 +173,7 @@ export function getValueByPointer(document: any, pointer: string): any {
   if (pointer == '') {
     return document;
   }
-  var getOriginalDestination = <GetOperation<any>>{ op: "_get", path: pointer };
+  const getOriginalDestination = <GetOperation<any>>{ op: "_get", path: pointer };
   applyOperation(document, getOriginalDestination);
   return getOriginalDestination.value;
 }
@@ -408,8 +408,8 @@ export function validator(operation: Operation, index: number, document?: any, e
 
   else if (document) {
     if (operation.op == "add") {
-      var pathLen = operation.path.split("/").length;
-      var existingPathLen = existingPathFragment.split("/").length;
+      const pathLen = operation.path.split("/").length;
+      const existingPathLen = existingPathFragment.split("/").length;
       if (pathLen !== existingPathLen + 1 && pathLen !== existingPathLen) {
         throw new JsonPatchError('Cannot perform an `add` operation at the desired path', 'OPERATION_PATH_CANNOT_ADD', index, operation, document);
       }
@@ -420,8 +420,8 @@ export function validator(operation: Operation, index: number, document?: any, e
       }
     }
     else if (operation.op === 'move' || operation.op === 'copy') {
-      var existingValue: any = { op: "_get", path: operation.from, value: undefined };
-      var error = validate([existingValue], document);
+      const existingValue: any = { op: "_get", path: operation.from, value: undefined };
+      const error = validate([existingValue], document);
       if (error && error.name === 'OPERATION_PATH_UNRESOLVABLE') {
         throw new JsonPatchError('Cannot perform the operation from a path that does not exist', 'OPERATION_FROM_UNRESOLVABLE', index, operation, document);
       }
@@ -447,7 +447,7 @@ export function validate<T>(sequence: Operation[], document?: T, externalValidat
     }
     else {
       externalValidator = externalValidator || validator;
-      for (var i = 0; i < sequence.length; i++) {
+      for (let i = 0; i < sequence.length; i++) {
         externalValidator(sequence[i], i, document, undefined);
       }
     }

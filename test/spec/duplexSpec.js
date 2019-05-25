@@ -53,18 +53,18 @@ var customMatchers = {
      * @param obj
      * @returns {boolean}
      */
-  toEqualInJson: function(util, customEqualityTesters) {
+  toEqualInJson (util, customEqualityTesters) {
     return {
-      compare: function(actual, expected) {
+      compare (actual, expected) {
         return {
           pass: JSON.stringify(actual) == JSON.stringify(expected)
         };
       }
     };
   },
-  toReallyEqual: function(util, customEqualityTesters) {
+  toReallyEqual (util, customEqualityTesters) {
     return {
-      compare: function(actual, expected) {
+      compare (actual, expected) {
         return {
           pass: _.isEqual(actual, expected)
         };
@@ -589,7 +589,7 @@ describe('duplex', function() {
       var obj = {
         a: a,
         b: 3,
-        toJSON: function() {
+        toJSON () {
           return {
             b: this.b
           };
@@ -609,7 +609,7 @@ describe('duplex', function() {
         obj: {
           a: a,
           b: 3,
-          toJSON: function() {
+          toJSON () {
             return {
               b: this.b
             };
@@ -1451,7 +1451,7 @@ describe('duplex', function() {
           value: obj
         }
       ]);
-            
+
     });
     it('Replacing an array that nested in an object with an object nested in an an object should be handled well', function() {
 
@@ -1465,7 +1465,7 @@ describe('duplex', function() {
           value: obj
         }
       ]);
-            
+
     });
     it('should return an add for a property that does not exist in the first obj', function() {
       var objA = {

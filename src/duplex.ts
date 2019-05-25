@@ -19,7 +19,7 @@ export interface Observer<T> {
   callback: (patches: Operation[]) => void;
 }
 
-var beforeDict = new WeakMap();
+const beforeDict = new WeakMap();
 
 class Mirror {
   obj: any;
@@ -64,9 +64,9 @@ export function unobserve<T>(root: T, observer: Observer<T>) {
  * Observes changes made to an object, which can then be retrieved using generate
  */
 export function observe<T>(obj: Object|Array<T>, callback?: (patches: Operation[]) => void): Observer<T> {
-  var patches = [];
-  var observer;
-  var mirror = getMirror(obj);
+  const patches = [];
+  let observer;
+  let mirror = getMirror(obj);
 
   if (!mirror) {
     mirror = new Mirror(obj);
@@ -84,14 +84,15 @@ export function observe<T>(obj: Object|Array<T>, callback?: (patches: Operation[
 
   mirror.value = _deepClone(obj);
 
+  let fastCheck;
   if (callback) {
     observer.callback = callback;
     observer.next = null;
 
-    var dirtyCheck = () => {
+    const dirtyCheck = () => {
       generate(observer);
     };
-    var fastCheck = () => {
+    fastCheck = () => {
       clearTimeout(observer.next);
       observer.next = setTimeout(dirtyCheck);
     };
@@ -145,12 +146,12 @@ export function observe<T>(obj: Object|Array<T>, callback?: (patches: Operation[
  * Generate an array of patches from an observer
  */
 export function generate<T>(observer: Observer<Object>): Operation[] {
-  var mirror = beforeDict.get(observer.object);
+  const mirror = beforeDict.get(observer.object);
   _generate(mirror.value, observer.object, observer.patches, "");
   if (observer.patches.length) {
     applyPatch(mirror.value, observer.patches);
   }
-  var temp = observer.patches;
+  const temp = observer.patches;
   if (temp.length > 0) {
     observer.patches = [];
     if (observer.callback) {
@@ -170,19 +171,19 @@ function _generate(mirror, obj, patches, path) {
     obj = obj.toJSON();
   }
 
-  var newKeys = _objectKeys(obj);
-  var oldKeys = _objectKeys(mirror);
-  var changed = false;
-  var deleted = false;
+  const newKeys = _objectKeys(obj);
+  const oldKeys = _objectKeys(mirror);
+  let changed = false;
+  let deleted = false;
 
   //if ever "move" operation is implemented here, make sure this test runs OK: "should not generate the same patch twice (move)"
 
-  for (var t = oldKeys.length - 1; t >= 0; t--) {
-    var key = oldKeys[t];
-    var oldVal = mirror[key];
+  for (let t = oldKeys.length - 1; t >= 0; t--) {
+    const key = oldKeys[t];
+    const oldVal = mirror[key];
 
     if (hasOwnProperty(obj, key) && !(obj[key] === undefined && oldVal !== undefined && Array.isArray(obj) === false)) {
-      var newVal = obj[key];
+      const newVal = obj[key];
 
       if (typeof oldVal == "object" && oldVal != null && typeof newVal == "object" && newVal != null) {
         _generate(oldVal, newVal, patches, path + "/" + escapePathComponent(key));
@@ -207,8 +208,8 @@ function _generate(mirror, obj, patches, path) {
     return;
   }
 
-  for (var t = 0; t < newKeys.length; t++) {
-    var key = newKeys[t];
+  for (let t = 0; t < newKeys.length; t++) {
+    const key = newKeys[t];
     if (!hasOwnProperty(mirror, key) && obj[key] !== undefined) {
       patches.push({ op: "add", path: path + "/" + escapePathComponent(key), value: _deepClone(obj[key]) });
     }
@@ -218,7 +219,7 @@ function _generate(mirror, obj, patches, path) {
  * Create an array of patches from the differences in two objects
  */
 export function compare(tree1: Object | Array<any>, tree2: Object | Array<any>): Operation[] {
-  var patches = [];
+  const patches = [];
   _generate(tree1, tree2, patches, '');
   return patches;
 }

@@ -1,7 +1,7 @@
 var util = require('util');
 var options = {
     showColors: true,
-    print: function() {
+    print () {
         process.stdout.write(util.format.apply(this, arguments));
     }
 };
